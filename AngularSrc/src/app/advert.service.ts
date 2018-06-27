@@ -16,5 +16,12 @@ export class AdvertService {
   getAdverts(){
     return this.http.get(this.apiUrl);
   }
+  getAdvert(id){
+    return this.http.get(this.apiUrl+'/'+id);
+  }
+
+  deleteAdvert(id){
+    return this.http.delete(this.apiUrl+'/'+id);
+  }
 
 }

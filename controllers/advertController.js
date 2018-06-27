@@ -18,6 +18,7 @@ router.get('/', (req,res) => {
     if(err){
       console.log(err);
     }
+    console.log("adverts chargées");
     res.json(adverts);
   });
 });

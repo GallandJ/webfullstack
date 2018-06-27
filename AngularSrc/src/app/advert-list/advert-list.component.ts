@@ -17,7 +17,9 @@ export class AdvertListComponent implements OnInit {
   }
 
   getAdverts(){
-    this.advertService.getAdverts().subscribe(data=> {
+    return this.advertService.getAdverts().subscribe(data=> {
+      console.log('ca marche');
+      console.log(data);
       this.adverts = data;
     })
   }

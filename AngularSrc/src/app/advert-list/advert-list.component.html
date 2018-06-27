@@ -2,7 +2,8 @@
   advert-list works!
 </p>
 <li *ngFor="let advert of adverts">
+  <a routerLink="/advert/detail/{{advert._id}}">
   {{advert.title}}
   {{advert.price}}
-
+</a>
 </li>
