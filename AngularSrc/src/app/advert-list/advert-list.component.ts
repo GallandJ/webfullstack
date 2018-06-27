@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AdvertService } from '../advert.service';
 
 @Component({
   selector: 'app-advert-list',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdvertListComponent implements OnInit {
 
-  constructor() { }
+  public adverts;
+
+  constructor(private advertService: AdvertService) { }
 
   ngOnInit() {
+    this.getAdverts();
+  }
+
+  getAdverts(){
+    this.advertService.getAdverts().subscribe(data=> {
+      this.adverts = data;
+    })
   }
 
 }
