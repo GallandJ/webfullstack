@@ -35,7 +35,13 @@ export class AdvertService {
   }
 
   updateAdvert(advert: Advert): Observable<Advert>{
-    return this.http.put<Advert>(this.apiUrl+advert.id, advert).map(res => {
+    console.log('udpateAdvert advert service : ' + advert);
+    return this.http.put<Advert>(this.apiUrl+advert.id, {
+      title: advert.title,
+      price: advert.price,
+      description: advert.description,
+      localisation: advert.localisation
+    }).map(res => {
       return res;
     })
   }

@@ -1,31 +1,30 @@
 <form [formGroup]="advertForm" (ngSubmit)="onSubmit()">
-  <h2 *ngIf="!paramsId">Create New Advert</h2>
-  <h2 *ngIf="paramsId">Updtate an Advert</h2>
   <div>
     <label class="center-block">Title :
-      <input formControlName="title" [(ngModel)] = "advert.title">
+      <input formControlName="title">
     </label>
   </div>
   <div>
     <label class="center-block">Price :
-      <input formControlName="price" [(ngModel)] = "advert.price">
+      <input formControlName="price">
     </label>
   </div>
   <div>
     <label class="center-block">Description :
-      <input formControlName="description" [(ngModel)] = "advert.description">
+      <input formControlName="description">
     </label>
   </div>
   <div>
     <label class="center-block">Localisation :
-      <input formControlName="localisation" [(ngModel)] = "advert.localisation">
+      <input formControlName="localisation">
     </label>
   </div>
 
 
   <div style="margin-bottom: 1em">
     <button type="submit"
-            [disabled]="advertForm.pristine" class="btn btn-success">Save</button> &nbsp;
+            [disabled]="advertForm.pristine" class="btn btn-success" >Save
+    </button> &nbsp;
   </div>
 
 

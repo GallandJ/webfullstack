@@ -5,6 +5,8 @@ const cors = require ('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const http = require('http');
+const socket = require('socket.io');
 
 const config = require('./config/db');
 
