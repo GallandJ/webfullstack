@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>advertController.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="UserController.html">
+                  UserController.js
+                </a>
+              
+                
+                <a class="source" href="advertController.html">
+                  advertController.js
+                </a>
+              
+                
+                <a class="source" href="authController.html">
+                  authController.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>advertController.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">const</span> router = express.Router();
+<span class="hljs-keyword">const</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>);
+
+<span class="hljs-keyword">const</span> AdvertModel = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../models/advertModel'</span>);
+<span class="hljs-keyword">const</span> UserModel = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../models/userModel'</span>);
+
+<span class="hljs-keyword">const</span> VerifyToken = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../middlewares/VerifyToken'</span>);
+<span class="hljs-keyword">const</span> Authorization = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../middlewares/Authorization'</span>);
+
+router.use(bodyParser.urlencoded({<span class="hljs-attr">extended</span>: <span class="hljs-literal">true</span>}));
+router.use(bodyParser.json());
+
+
+
+router.get(<span class="hljs-string">'/'</span>, (req,res) =&gt; {
+  AdvertModel.find(<span class="hljs-function">(<span class="hljs-params">err, adverts</span>) =&gt;</span>{
+    <span class="hljs-keyword">if</span>(err){
+      <span class="hljs-built_in">console</span>.log(err);
+    }
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"adverts chargées"</span>);
+    res.json(adverts);
+  });
+});
+
+router.get(<span class="hljs-string">'/:id'</span>, (req, res) =&gt; {
+  AdvertModel.findById(req.params.id, (err, advert) =&gt; {
+    <span class="hljs-keyword">if</span>(err){
+      <span class="hljs-built_in">console</span>.log(err);
+    }
+    res.json(advert);
+  });
+});
+
+router.post(<span class="hljs-string">'/'</span>, VerifyToken, (req, res) =&gt; {
+  <span class="hljs-keyword">var</span> advert = <span class="hljs-keyword">new</span> AdvertModel();
+  advert.title = req.body.title;
+  advert.price = req.body.price;
+  advert.description = req.body.description;
+  advert.localisation = req.body.localisation;
+  advert.user = req.userId;
+
+  UserModel.findByIdAndUpdate(req.userId, {<span class="hljs-attr">$push</span>: {<span class="hljs-attr">adverts</span>: advert._id}}, (err, user) =&gt; {
+    <span class="hljs-keyword">if</span>(err) res.json(err);
+  })
+
+  advert.save(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span>  {
+    <span class="hljs-keyword">if</span>(err){
+      res.json(err);
+    }
+    res.json({<span class="hljs-attr">message</span>: <span class="hljs-string">'Advert created !'</span> + advert.title + advert.price})
+  });
+});
+
+router.put(<span class="hljs-string">'/:id'</span>, Authorization, (req, res) =&gt; {
+  AdvertModel.findById(req.params.id, (err, advert) =&gt; {
+    <span class="hljs-keyword">if</span>(!advert){
+      res.json({<span class="hljs-attr">message</span>: <span class="hljs-string">'No advert founded for this ID'</span>})
+    }
+
+
+    AdvertModel.findByIdAndUpdate(req.params.id, req.body, (err, advert) =&gt; {
+              <span class="hljs-keyword">if</span>(err){
+                <span class="hljs-built_in">console</span>.log(err);
+              }
+              <span class="hljs-keyword">if</span>(!advert){
+                res.json({<span class="hljs-attr">message</span>: <span class="hljs-string">'no advert founded for this ID'</span>})
+              }
+              <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'advert updated'</span>);
+              res.json({<span class="hljs-attr">message</span>: <span class="hljs-string">'advert Updated'</span>});
+            });
+  });
+});
+
+router.delete(<span class="hljs-string">'/:id'</span>, Authorization,(req, res) =&gt; {
+  AdvertModel.findById(req.params.id, (err, advert) =&gt; {
+    <span class="hljs-keyword">if</span>(!advert) {
+      res.json({<span class="hljs-attr">message</span>: <span class="hljs-string">'No advert founded for this ID'</span>})
+    }
+    advert.remove(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
+      <span class="hljs-keyword">if</span>(err){
+        res.json(err);
+      }
+      res.json({<span class="hljs-attr">message</span>: <span class="hljs-string">"Advert deleted"</span>});
+    });
+  });
+});
+
+<span class="hljs-comment">/*
+router.get('/me', VerifyToken, (req, res) =&gt; {
+  UserModel.findById(req.userId, (err, adverts) =&gt; {
+    if(err){
+      res.json(err);
+    }
+    AdvertModel.find({'user': req.userId}, (err, adverts) =&gt; {
+      if(err) res.json(err);
+      if(!user) res.json({message: 'No user corresponding to this token.'})
+      res.json(adverts);
+    });
+  });
+});
+*/</span>
+
+<span class="hljs-built_in">module</span>.exports = router;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

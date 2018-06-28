@@ -39,24 +39,43 @@ router.post('/', VerifyToken, (req, res) => {
   advert.description = req.body.description;
   advert.localisation = req.body.localisation;
   advert.user = req.userId;
-  console.log("req.userId : " + req.userId)
 
   UserModel.findByIdAndUpdate(req.userId, {$push: {adverts: advert._id}}, (err, user) => {
     if(err) res.json(err);
   })
+
   advert.save((err) =>  {
     if(err){
       res.json(err);
     }
-  });
-
     res.json({message: 'Advert created !' + advert.title + advert.price})
+  });
+});
+
+router.put('/:id', Authorization, (req, res) => {
+  AdvertModel.findById(req.params.id, (err, advert) => {
+    if(!advert){
+      res.json({message: 'No advert founded for this ID'})
+    }
+
+
+    AdvertModel.findByIdAndUpdate(req.params.id, req.body, (err, advert) => {
+              if(err){
+                console.log(err);
+              }
+              if(!advert){
+                res.json({message: 'no advert founded for this ID'})
+              }
+              console.log('advert updated');
+              res.json({message: 'advert Updated'});
+            });
+  });
 });
 
 router.delete('/:id', Authorization,(req, res) => {
   AdvertModel.findById(req.params.id, (err, advert) => {
     if(!advert) {
-      res.json({message: 'No advert for this ID'})
+      res.json({message: 'No advert founded for this ID'})
     }
     advert.remove((err) => {
       if(err){
