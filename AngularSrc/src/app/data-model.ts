@@ -1,6 +1,6 @@
 export class Advert {
-    title;
-    price;
-    description;
-    localisation;
+    title: string;
+    price: number;
+    description: string;
+    localisation: number;
 }

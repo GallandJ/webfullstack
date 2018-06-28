@@ -1,8 +1,32 @@
-<p>
-  advert-form works!
-</p>
-<div class="form-group">
-    <label class="center-block">Name:
-      <input class="form-control" formControlName="name">
+<form [formGroup]="advertForm" (ngSubmit)="onSubmit()">
+  <h2 *ngIf="!paramsId">Create New Advert</h2>
+  <h2 *ngIf="paramsId">Updtate an Advert</h2>
+  <div>
+    <label class="center-block">Title :
+      <input formControlName="title" [(ngModel)] = "advert.title">
     </label>
-</div>
+  </div>
+  <div>
+    <label class="center-block">Price :
+      <input formControlName="price" [(ngModel)] = "advert.price">
+    </label>
+  </div>
+  <div>
+    <label class="center-block">Description :
+      <input formControlName="description" [(ngModel)] = "advert.description">
+    </label>
+  </div>
+  <div>
+    <label class="center-block">Localisation :
+      <input formControlName="localisation" [(ngModel)] = "advert.localisation">
+    </label>
+  </div>
+
+
+  <div style="margin-bottom: 1em">
+    <button type="submit"
+            [disabled]="advertForm.pristine" class="btn btn-success">Save</button> &nbsp;
+  </div>
+
+
+</form>

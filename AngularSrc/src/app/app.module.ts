@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { routing } from './app.routes';
-import { AdvertFormComponent } from './advert-form/advert-form.component';
+
 
 @NgModule({
   declarations: [
