@@ -5,6 +5,8 @@ const cors = require ('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const http = require('http');
+const socket = require('socket.io');
 
 const config = require('./config/db');
 
@@ -23,6 +25,15 @@ mongoose.connect(config.database);
 
 //Middleware for CORS
 app.use(cors());
+
+// socket.io connection
+io.on('connection', (socket) => {
+  console.log("Connected to Socket!!"+ socket.id);
+  // Receiving Todos from client
+  socket.on('addTodo', (Todo) => {
+    console.log('socketData: '+JSON.stringify(Todo));
+    todoController.addTodo(io,Todo);
+  });
 
 //Middleware for bodyparsing using both json and urlencoding
 app.use(bodyParser.urlencoded({extended:true}));
