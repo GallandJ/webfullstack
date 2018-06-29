@@ -8,10 +8,26 @@ const UserModel = require('../models/userModel');
 const VerifyToken = require('../middlewares/VerifyToken');
 const Authorization = require('../middlewares/Authorization');
 
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
+server.listen(4000);
 
+// socket io
+io.on('connection', function (socket) {
+  console.log('User connected');
+  socket.on('disconnect', function() {
+    console.log('User disconnected');
+  });
+  socket.on('save-advert', function (data) {
+    console.log(data);
+    io.emit('new-advert', { message: data });
+  });
+});
 
 router.get('/', (req,res) => {
   AdvertModel.find((err, adverts) =>{
@@ -41,11 +57,15 @@ router.post('/', VerifyToken, (req, res) => {
   advert.user = req.userId;
 
   UserModel.findByIdAndUpdate(req.userId, {$push: {adverts: advert._id}}, (err, user) => {
-    if(err) res.json(err);
+    if(err){
+      console.log('erreur1 : ' + err);
+      res.json(err);
+    }
   })
 
   advert.save((err) =>  {
     if(err){
+      console.log('erreur2 : ' + err);
       res.json(err);
     }
     res.json({message: 'Advert created !' + advert.title + advert.price})

@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AdvertService } from '../advert.service';
+import * as io from "socket.io-client";
+
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-advert-list',
@@ -8,9 +12,15 @@ import { AdvertService } from '../advert.service';
 })
 export class AdvertListComponent implements OnInit {
 
-  public adverts;
+  adverts: any;
+  socket = io('http://localhost:4000');
 
-  constructor(private advertService: AdvertService) { }
+  constructor(private advertService: AdvertService, private http: HttpClient, private router: Router) {
+    this.socket.on('new-advert', function (data) {
+
+      this.adverts.push(data);
+    }.bind(this));
+  }
 
   ngOnInit() {
     this.getAdverts();
