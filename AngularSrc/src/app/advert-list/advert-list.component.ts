@@ -17,16 +17,17 @@ export class AdvertListComponent implements OnInit {
 
   constructor(private advertService: AdvertService, private http: HttpClient, private router: Router) {
     this.socket.on('new-advert', function (data) {
-      console.log('socket recu');
-      console.log(data);
-
-      this.adverts.push(data);
+    this.adverts.push(data);
     }.bind(this));
+      this.socket.on('delete-advert', function(data) {
+      this.getAdverts();
+    }.bind(this);
   }
 
   ngOnInit() {
     this.getAdverts();
     console.log(this.adverts);
+    console.log('local storage token ' + localStorage.getItem('id_token'));
   }
 
   getAdverts(){

@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    console.log('bite');
         const val = this.loginForm.value;
 
         if (val.email && val.password) {
@@ -34,7 +35,12 @@ export class LoginComponent implements OnInit {
         }
     }
 
+    logout(){
+      this.authService.logout();
+    }
+
   ngOnInit() {
+    this.logout();
   }
 
 }

@@ -43,7 +43,7 @@ export class AdvertFormComponent implements OnInit {
 
   saveAdvert() {
     const headers = new HttpHeaders()
-        .append('x-access-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViMzNmY2YzNWU5ODk5MWRmMDUwYThkOSIsImlhdCI6MTUzMDIyMjk1OCwiZXhwIjoxNTMwMzA5MzU4fQ.bHGEV4JtBnmzFoZXB7oaHiW7UyfvSf95wgg0ftsx8Gk');
+        .append('x-access-token', localStorage.getItem('id_token'));
     const body = {
         title:  this.advert.title,
         price: this.advert.price,

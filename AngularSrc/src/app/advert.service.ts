@@ -1,18 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AdvertAngular } from './models/advertangular';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import * as io from "socket.io-client";
 import 'rxjs/add/operator/map';
 
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+    'Authorization': 'my-auth-token'
+  })
+}
 
 
 @Injectable()
-
-
 export class AdvertService {
 
+  socket = io('http://localhost:4000');
   apiUrl = 'http://localhost:3000/api/advert/';
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient, public router : Router) { }
 
   getAdverts(){
     return this.http.get<AdvertAngular>(this.apiUrl).map(res => {
@@ -27,28 +34,26 @@ export class AdvertService {
   }
 
   deleteAdvert(id){
-    console.log(localStorage.getItem('id_token'))
+    console.log('id token dans le service' + localStorage.getItem('id_token'))
 
-    const headers = new HttpHeaders()
-        .append('x-access-token': localStorage.getItem('token'));
-
-    if(localStorage.auth==false){
-      console.log('Vous ne pouvez pas supprimer une annonce si vous nêtes pas identifiés');
-    }
-    else{
-      console.log("la fonction delete est appellée")
-      return this.http.delete(this.apiUrl+id, {headers: headers}).subscribe(res => {
-        console.log("la fonction delete est passée")
-        return res;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'x-access-token': localStorage.getItem('id_token')
       });
-
-
     }
-    console.log("la fonction delete est appellée")
-    return this.http.delete(this.apiUrl+id).subscribe(res => {
-      console.log("la fonction delete est passée")
-      return res;
-    });
+
+      console.log("la fonction delete est bien appellée");
+      return this.http.delete(this.apiUrl+id,httpOptions).subscribe(res => {
+        console.log("la fonction delete est passée");
+        this.socket.emit('delete-advert', {message: 'advertDeleted'});
+        this.router.navigateByUrl('');
+        return res;
+      }, (err) => {
+        console.log('erreur 1');
+        console.log(localStorage.getItem('id_token'));
+        console.log(err);
+      });
   }
 
   createAdvert(advert: AdvertAngular){

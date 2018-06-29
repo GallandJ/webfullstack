@@ -27,6 +27,9 @@ io.on('connection', function (socket) {
     console.log(data);
     io.emit('new-advert', data);
   });
+  socket.on('delete-advert', function(data) {
+    io.emit('advert-deleted', data);
+  });
 });
 
 router.get('/', (req,res) => {
@@ -91,6 +94,7 @@ router.put('/:id', Authorization, (req, res) => {
 });
 
 router.delete('/:id', Authorization,(req, res) => {
+  console.log('Auth passée');
   AdvertModel.findById(req.params.id, (err, advert) => {
     if(!advert) {
       res.json({message: 'No advert founded for this ID'})
