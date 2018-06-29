@@ -25,7 +25,7 @@ io.on('connection', function (socket) {
   });
   socket.on('save-advert', function (data) {
     console.log(data);
-    io.emit('new-advert', { message: data });
+    io.emit('new-advert', data);
   });
 });
 
@@ -58,14 +58,12 @@ router.post('/', VerifyToken, (req, res) => {
 
   UserModel.findByIdAndUpdate(req.userId, {$push: {adverts: advert._id}}, (err, user) => {
     if(err){
-      console.log('erreur1 : ' + err);
       res.json(err);
     }
   })
 
   advert.save((err) =>  {
     if(err){
-      console.log('erreur2 : ' + err);
       res.json(err);
     }
     res.json({message: 'Advert created !' + advert.title + advert.price})
@@ -106,7 +104,7 @@ router.delete('/:id', Authorization,(req, res) => {
   });
 });
 
-/*
+
 router.get('/me', VerifyToken, (req, res) => {
   UserModel.findById(req.userId, (err, adverts) => {
     if(err){
@@ -119,6 +117,6 @@ router.get('/me', VerifyToken, (req, res) => {
     });
   });
 });
-*/
+
 
 module.exports = router;

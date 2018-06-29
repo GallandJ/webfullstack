@@ -1,0 +1,25 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label class="center-block">Name :
+      <input formControlName="name">
+    </label>
+  </div>
+  <div>
+    <label class="center-block">Email :
+      <input formControlName="email">
+    </label>
+  </div>
+  <div>
+    <label class="center-block">Password :
+      <input formControlName="password">
+    </label>
+  </div>
+
+  <div style="margin-bottom: 1em">
+    <button type="submit"
+            [disabled]="registerForm.pristine" class="btn btn-success" >Save
+    </button> &nbsp;
+  </div>
+
+
+</form>

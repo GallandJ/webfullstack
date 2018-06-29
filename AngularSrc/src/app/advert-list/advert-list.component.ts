@@ -17,6 +17,8 @@ export class AdvertListComponent implements OnInit {
 
   constructor(private advertService: AdvertService, private http: HttpClient, private router: Router) {
     this.socket.on('new-advert', function (data) {
+      console.log('socket recu');
+      console.log(data);
 
       this.adverts.push(data);
     }.bind(this));
@@ -24,11 +26,11 @@ export class AdvertListComponent implements OnInit {
 
   ngOnInit() {
     this.getAdverts();
+    console.log(this.adverts);
   }
 
   getAdverts(){
     return this.advertService.getAdverts().subscribe(data=> {
-      console.log('ca marche');
       console.log(data);
       this.adverts = data;
     })

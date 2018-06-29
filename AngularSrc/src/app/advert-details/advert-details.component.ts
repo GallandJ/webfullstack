@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AdvertService } from '../advert.service';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-advert-details',
@@ -7,9 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdvertDetailsComponent implements OnInit {
 
-  constructor() { }
+    advertId;
+    advert;
 
-  ngOnInit() {
-  }
+    constructor(private route: ActivatedRoute, private advertService: AdvertService) {
+      this.route.params.subscribe( params => this.advertId = params.id);
+    }
 
+    ngOnInit() {
+      //this.route.params.subscribe( params => this.advertId = params.id) );
+      this.getAdvert(this.advertId);
+      console.log(this.advertId);
+    }
+
+    getAdvert(id){
+      return this.advertService.getAdvert(id).subscribe(data=> {
+        this.advert = data;
+      });
+    }
+    deleteAdvert(){
+      console.log('on veux delete');
+      return this.advertService.deleteAdvert(this.advertId);
+    }
 }

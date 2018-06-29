@@ -4,7 +4,7 @@ import { AdvertAngular } from '../models/advertangular';
 import { AdvertService } from '../advert.service';
 import { Router, ActivatedRoute } from "@angular/router";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { HttpParameterCodec, HttpParams } from '@angular/common/http';
+import * as io from "socket.io-client";
 
 
 
@@ -19,6 +19,7 @@ export class AdvertFormComponent implements OnInit {
   advertForm: FormGroup;
   advert: any;
   paramsId: null;
+  socket = io('http://localhost:4000');
 
   constructor(private fb: FormBuilder, private advertService: AdvertService, public route: ActivatedRoute, public router: Router, private http: HttpClient) {
 
@@ -53,6 +54,7 @@ export class AdvertFormComponent implements OnInit {
 
     this.http.post('http://localhost:3000/api/advert/',body, {headers: headers})
       .subscribe(res => {
+          this.socket.emit('save-advert', { title: this.advert.title, price: this.advert.price, description: this.advert.description, localisation: this.advert.localisation});
           console.log('requete lancée')
           let id = res['_id'];
           //this.router.navigate(['/book-details', id]);
@@ -64,10 +66,10 @@ export class AdvertFormComponent implements OnInit {
 
   createForm() {
   this.advertForm = this.fb.group({
-    title: new FormControl('', [ Validators.minLength(5), Validators.maxLength(10)]),
-    price: new FormControl('', [ Validators.min(0)]),
-    description: new FormControl('', [ Validators.minLength(10), Validators.maxLength(500)]),
-    localisation: new FormControl('', [ Validators.min(0)])
+    title: new FormControl('', [ Validators.required, Validators.minLength(5), Validators.maxLength(10)]),
+    price: new FormControl('', [ Validators.required, Validators.min(0)]),
+    description: new FormControl('', [ Validators.required, Validators.minLength(10), Validators.maxLength(500)]),
+    localisation: new FormControl('', [ Validators.required, Validators.min(0)])
     });
   }
 

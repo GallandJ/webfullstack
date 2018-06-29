@@ -1,3 +1,11 @@
-<p>
-  advert-details works!
+<p *ngIf="advert">
+  {{advert._id}}
+  {{advert.title}}
+  {{advert.price}}
+  {{advert.description}}
+  {{advert.localisation}}
+
+  <button type="button" name="button" routerLink="/advert/form/{{advert._id}}">Edit</button>
+  <button type="button" name="button" (click)="deleteAdvert()">Delete</button>
+
 </p>

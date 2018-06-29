@@ -10,14 +10,19 @@ import { AdvertListComponent } from './advert-list/advert-list.component';
 import { AdvertDetailsComponent } from './advert-details/advert-details.component';
 
 import { AdvertService } from './advert.service';
-import { AdvertFormComponent } from './advert-form/advert-form.component'
+import { AuthService } from './auth.service';
+import { AdvertFormComponent } from './advert-form/advert-form.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     AdvertListComponent,
     AdvertDetailsComponent,
-    AdvertFormComponent
+    AdvertFormComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +31,7 @@ import { AdvertFormComponent } from './advert-form/advert-form.component'
     ReactiveFormsModule,
     routing
   ],
-  providers: [AdvertService],
+  providers: [AdvertService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

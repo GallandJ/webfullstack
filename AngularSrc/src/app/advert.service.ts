@@ -4,12 +4,7 @@ import { AdvertAngular } from './models/advertangular';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/x-www-form-urlencoded',
-    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViMzNmY2YzNWU5ODk5MWRmMDUwYThkOSIsImlhdCI6MTUzMDIyMjk1OCwiZXhwIjoxNTMwMzA5MzU4fQ.bHGEV4JtBnmzFoZXB7oaHiW7UyfvSf95wgg0ftsx8Gk'
-  })
-};
+
 
 @Injectable()
 
@@ -32,7 +27,28 @@ export class AdvertService {
   }
 
   deleteAdvert(id){
-    return this.http.delete(this.apiUrl+id);
+    console.log(localStorage.getItem('id_token'))
+
+    const headers = new HttpHeaders()
+        .append('x-access-token': localStorage.getItem('token'));
+
+    if(localStorage.auth==false){
+      console.log('Vous ne pouvez pas supprimer une annonce si vous nêtes pas identifiés');
+    }
+    else{
+      console.log("la fonction delete est appellée")
+      return this.http.delete(this.apiUrl+id, {headers: headers}).subscribe(res => {
+        console.log("la fonction delete est passée")
+        return res;
+      });
+
+
+    }
+    console.log("la fonction delete est appellée")
+    return this.http.delete(this.apiUrl+id).subscribe(res => {
+      console.log("la fonction delete est passée")
+      return res;
+    });
   }
 
   createAdvert(advert: AdvertAngular){
